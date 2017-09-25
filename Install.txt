@@ -1,0 +1,26 @@
+
+Library usage:
+
+##### Visual Studio Solution (Windows) #####
+
+ Build the static library "urg3d.lib" with urg3d_library-X.X.X/vs201*/urg3d.sln.
+ (Visual studio 2010 project and visual studio 2012 project exist.)
+ 
+ Sample solutions that use urg3d.lib exist in urg3d_library-X.X.X/vs201*/.
+ Each sample can be tested on the above visual studio project if it is set as the startup project.
+
+##### Visual Studio bat compile (Windows) #####
+
+ Copy vsvars32.bat to urg3d_library-X.X.X/windowsexe.
+ Execute urg3d_library-X.X.X/windowsexe/compile.bat to generate the static library urg3d.lib and samples.
+
+ (If you want to clear created files, you can use urg3d_library-X.X.X/windowsexe/cleanobj.bat.)
+
+##### gcc (Linux, MinGW) #####
+
+ Type "make" to compile the static library "liburg3d.a" and the shared library "liburg3d.so".
+ If the compilation is successful, these libraries are created in urg3d_library-X.X.X/src/.
+
+ (If you want to install the library to your system, execute "make install" as root.)
+
+ Example programs exist in urg3d_library-X.X.X/samples.

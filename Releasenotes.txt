@@ -1,0 +1,11 @@
+2016-07-29
+  * 1.0.2 released
+  * Fix multi-threading problem which caused by shared static temporal variable
+
+2015-11-18
+	* 1.0.1 released
+	* Add sensor reboot sample
+
+2014-12-26
+	* 1.0.0 released.
+	* Initial release.
