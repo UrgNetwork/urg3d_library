@@ -1,4 +1,4 @@
-TARGET = low_get_ri low_get_ro low_get_ax low_get_multi_data low_user_request high_get_version high_1_line_data_file high_1_field_data_file high_1_frame_4_field_data_file high_get_auxiliary low_get_ro_with_error_reboot
+TARGET = low_get_ri low_get_ro low_get_ax low_get_multi_data low_user_request high_get_version high_1_line_data_file high_1_field_data_file high_1_frame_4_field_data_file high_1_frame_4_vfield_2_hfield_data_file high_get_auxiliary low_get_ro_with_error_reboot
 
 URG_LIB = ../src/liburg3d.a
 
