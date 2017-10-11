@@ -1,6 +1,6 @@
 #!/bin/sh
 
-version=1.0.0
+version=1.0.3
 prefix=PREFIX
 includedir=${prefix}/include
 installlib=${prefix}/lib

@@ -3,7 +3,7 @@
 About this software:
   このソフトウェアは北陽電機株式会社の三次元測域センサを利用するためのライブラリです。
   センサの利用方法を示すためのサンプルが同梱されています。
-    
+
   *** Cautions! ***
   This library support ILP32 or LLP64 or LP64.
   These "int" type is 32bit.
@@ -15,7 +15,8 @@ Authors:
   Kristou Mehrez (Hokuyo Automatic Co., Ltd.) kristou@hokuyo-aut.jp
   Kiyoshi Matsuo (Hokuyo Automatic Co., Ltd.) k-matsuo@hokuyo-aut.co.jp
   Jun Fujimoto (Hokuyo Automatic Co., Ltd.) j_fujimoto@hokuyo-aut.co.jp
- 
+  HUANG da (Hokuyo Automatic Co., Ltd.) d-huang@hokuyo-aut.co.jp
+
 License:
   (C)Simplified BSD License.
   See COPYRIGHT file.
@@ -96,37 +97,37 @@ Library usage:
 Header and Source List:
 
   ## urg_connection.h, urg_connection.c ##
-     
+
      イーサネットとシリアルポートに対応した接続機能
      （urg_libraryからの移植で改変なし）
-  
+
   ## urg_detect_os.h ##
-     
+
      OS識別機能
      （urg_libraryからの移植で、Windows用のM_PIはここへ記載）
-  
+
   ## urg_errno.h ##
-     
+
      エラー番号定義
      （urg_libraryからの移植で改変なし）
-  
+
   ## urg_ring_buffer.h, urg_ring_buffer.c ##
-     
+
      リングバッファ機能
      （urg_libraryからの移植で改変なし）
 
   ## urg_tcpclient.h, urg_tcpclient.c ##
-     
+
      イーサネットによる通信機能
      （urg_libraryからの移植で、URG3D_MAX_RX_BUFFER_BITを12bitから16bitへ増やした）
-  
+
   ## urg_ticks.h, urg_ticks.c ##
-     
+
      複数OSに対応した時刻機能
      （urg_libraryからの移植で、tick_ms()を利用する構成に修正）
-  
+
   ## urg3d_sensor.h, urg3d_sensor.c ##
-     
+
      イーサネット限定でVSSPによる通信機能とユーザ関数群
      なお、基礎的な機能として以下の２つを追加している。
      ・urg_ring_bufferに実装の無い、「ポインタは動かさない仮読込」機能の追加

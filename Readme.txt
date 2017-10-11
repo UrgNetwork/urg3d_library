@@ -4,7 +4,7 @@ About this software:
   This software have been developed to provide a library to use
   3D scanning range sensors of Hokuyo Automatic Corporation.  Samples
   will help to know how to use them.
-  
+
   *** Cautions! ***
   This library support ILP32 or LLP64 or LP64.
   These "int" type is 32bit.
@@ -16,6 +16,7 @@ Author:
   Kristou Mehrez (Hokuyo Automatic Co., Ltd.) kristou@hokuyo-aut.jp
   Kiyoshi Matsuo (Hokuyo Automatic Co., Ltd.) k-matsuo@hokuyo-aut.co.jp
   Jun Fujimoto (Hokuyo Automatic Co., Ltd.) j_fujimoto@hokuyo-aut.co.jp
+  HUANG da (Hokuyo Automatic Co., Ltd.) d-huang@hokuyo-aut.co.jp
 
 License:
   (C)Simplified BSD License.
@@ -39,7 +40,7 @@ Library usage:
 
  Build the static library "urg3d.lib" with urg3d_library-X.X.X/vs201*/urg3d.sln.
  (Visual studio 2010 project and visual studio 2012 project exist.)
- 
+
  Sample solutions that use urg3d.lib exist in urg3d_library-X.X.X/vs201*/.
  Each sample can be tested on the above visual studio project if it is set as the startup project.
 
@@ -62,29 +63,29 @@ Library usage:
 Header and Source List:
 
  ## urg_connection.h, urg_connection.c ##
-     
+
   functions to handle communication with urg sensor (serial/ethernet)
 
  ## urg_detect_os.h ##
-     
+
   header to detect OS type
-  
+
  ## urg_errno.h ##
-     
+
   header for error code
-  
+
  ## urg_ring_buffer.h, urg_ring_buffer.c ##
-     
+
   functions to handle ring buffer
 
  ## urg_tcpclient.h, urg_tcpclient.c ##
-     
+
    functions to handle ethernet communication
-  
+
  ## urg_ticks.h, urg_ticks.c ##
-     
+
    functions to handle timer
-  
+
  ## urg3d_sensor.h, urg3d_sensor.c ##
 
    functions to handle VSSP on TCP/IP
