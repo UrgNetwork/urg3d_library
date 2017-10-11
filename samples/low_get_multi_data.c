@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     }
 
     /*
-     * request to start the auxilary data
+     * request to start the auxiliary data
      */
     if((ret = urg3d_low_request_command(&urg, "DAT:ax=1\n")) < 0) {
         printf("error urg3d_low_request_command %d\n", ret);
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     }
 
     /*
-     * request to stop the auxilary data
+     * request to stop the auxiliary data
      */
     if((ret = urg3d_low_request_command(&urg, "DAT:ax=0\n")) < 0) {
         printf("error urg3d_low_request_command %d\n", ret);
