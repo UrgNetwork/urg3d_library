@@ -37,6 +37,11 @@ int urg3d_open(urg3d_t* const urg
         return urg->last_errno;
     }
 
+    // stop the acquisition data.
+    if((ret = urg3d_high_stop_data(urg, URG3D_DISTANCE_INTENSITY)) < 0) {
+        return ret;
+    }
+
     urg->is_active = URG_TRUE;
     return 0;
 }
