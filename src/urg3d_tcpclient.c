@@ -4,20 +4,20 @@
 
   \author Katsumi Kimoto
 
-  $Id: urg_tcpclient.c,v 45882596fe08 2013/08/26 08:35:34 jun $
+  $Id: urg3d_tcpclient.c,v 45882596fe08 2013/08/26 08:35:34 jun $
 */
 
 // http://www.ne.jp/asahi/hishidama/home/tech/lang/socket.html
 
-#include "urg_detect_os.h"
+#include "urg3d_detect_os.h"
 #include <string.h>
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
 #else
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 #endif
-#include "urg_tcpclient.h"
+#include "urg3d_tcpclient.h"
 
 #include <stdio.h>
 
@@ -26,38 +26,38 @@ enum {
 };
 
 
-static void tcpclient_buffer_init(urg_tcpclient_t* cli)
+static void urg3d_tcpclient_buffer_init(urg3d_tcpclient_t* cli)
 {
-    ring_initialize(&cli->rb, cli->buf, RB_BITSHIFT);
+    urg3d_ring_initialize(&cli->rb, cli->buf, URG3D_RB_BITSHIFT);
 }
 
 
 // get number of data in buffer.
-static int tcpclient_buffer_data_num(urg_tcpclient_t* cli)
+static int urg3d_tcpclient_buffer_data_num(urg3d_tcpclient_t* cli)
 {
-    return ring_size(&cli->rb);
+    return urg3d_ring_size(&cli->rb);
 }
 
 
-static int tcpclient_buffer_write(urg_tcpclient_t* cli
+static int urg3d_tcpclient_buffer_write(urg3d_tcpclient_t* cli
                                   , const char* data
                                   , int size)
 {
-    return ring_write(&cli->rb, data, size);
+    return urg3d_ring_write(&cli->rb, data, size);
 }
 
 
-static int tcpclient_buffer_read(urg_tcpclient_t* cli
+static int urg3d_tcpclient_buffer_read(urg3d_tcpclient_t* cli
                                  , char* data
                                  , int size)
 {
-    return ring_read(&cli->rb, data, size);
+    return urg3d_ring_read(&cli->rb, data, size);
 }
 
 
-static void set_block_mode(urg_tcpclient_t* cli)
+static void set_block_mode(urg3d_tcpclient_t* cli)
 {
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
     u_long flag = 0;
     ioctlsocket(cli->sock_desc, FIONBIO, &flag);
 #else
@@ -67,14 +67,14 @@ static void set_block_mode(urg_tcpclient_t* cli)
 }
 
 
-int tcpclient_open(urg_tcpclient_t* cli
+int urg3d_tcpclient_open(urg3d_tcpclient_t* cli
                    , const char* ip_str
                    , int port_num)
 {
     enum { Connect_timeout_second = 2 };
     fd_set rmask, wmask;
     struct timeval tv = { Connect_timeout_second, 0 };
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
     u_long flag;
 #else
     int flag;
@@ -86,7 +86,7 @@ int tcpclient_open(urg_tcpclient_t* cli
     cli->sock_desc = Invalid_desc;
     cli->pushed_back = -1; // no pushed back char.
 
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
     {
         static int is_initialized = 0;
         WORD wVersionRequested = 0x0202;
@@ -102,7 +102,7 @@ int tcpclient_open(urg_tcpclient_t* cli
     }
 #endif
 
-    tcpclient_buffer_init(cli);
+    urg3d_tcpclient_buffer_init(cli);
 
     cli->sock_addr_size = sizeof (struct sockaddr_in);
     if ((cli->sock_desc = (int)socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -122,7 +122,7 @@ int tcpclient_open(urg_tcpclient_t* cli
         return -1;
     }
 
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
     // non-blocking
     flag = 1;
     ioctlsocket(cli->sock_desc, FIONBIO, &flag);
@@ -131,7 +131,7 @@ int tcpclient_open(urg_tcpclient_t* cli
                 cli->sock_addr_size) == SOCKET_ERROR) {
         int error_number = WSAGetLastError();
         if (error_number != WSAEWOULDBLOCK) {
-            tcpclient_close(cli);
+            urg3d_tcpclient_close(cli);
             return -1;
         }
 
@@ -142,7 +142,7 @@ int tcpclient_open(urg_tcpclient_t* cli
         ret = select((int)cli->sock_desc + 1, &rmask, &wmask, NULL, &tv);
         if (ret == 0) {
             // timeout
-            tcpclient_close(cli);
+            urg3d_tcpclient_close(cli);
             return -2;
         }
     }
@@ -157,7 +157,7 @@ int tcpclient_open(urg_tcpclient_t* cli
     if (connect(cli->sock_desc, (const struct sockaddr *)&(cli->server_addr),
                 cli->sock_addr_size) < 0) {
         if (errno != EINPROGRESS) {
-            tcpclient_close(cli);
+            urg3d_tcpclient_close(cli);
             return -1;
         }
 
@@ -169,20 +169,20 @@ int tcpclient_open(urg_tcpclient_t* cli
         ret = select(cli->sock_desc + 1, &rmask, &wmask, NULL, &tv);
         if (ret <= 0) {
             // timeout
-            tcpclient_close(cli);
+            urg3d_tcpclient_close(cli);
             return -2;
         }
 
         if (getsockopt(cli->sock_desc, SOL_SOCKET, SO_ERROR, (int*)&sock_optval,
                        (socklen_t*)&sock_optval_size) != 0) {
             // connection failed
-            tcpclient_close(cli);
+            urg3d_tcpclient_close(cli);
             return -3;
         }
 
         if (sock_optval != 0) {
             // connection failed
-            tcpclient_close(cli);
+            urg3d_tcpclient_close(cli);
             return -4;
         }
 
@@ -194,10 +194,10 @@ int tcpclient_open(urg_tcpclient_t* cli
 }
 
 
-void tcpclient_close(urg_tcpclient_t* cli)
+void urg3d_tcpclient_close(urg3d_tcpclient_t* cli)
 {
     if (cli->sock_desc != Invalid_desc) {
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
         closesocket(cli->sock_desc);
         //WSACleanup();
 #else
@@ -208,45 +208,45 @@ void tcpclient_close(urg_tcpclient_t* cli)
 }
 
 
-int tcpclient_read(urg_tcpclient_t* cli
+int urg3d_tcpclient_read(urg3d_tcpclient_t* cli
                    , char* userbuf
                    , int req_size
                    , int timeout)
 {
     // number of data in buffer.
-    int num_in_buf = tcpclient_buffer_data_num(cli);
+    int num_in_buf = urg3d_tcpclient_buffer_data_num(cli);
     int sock       = cli->sock_desc;
     int rem_size   = req_size;  // remaining size to be sent back.
     int n;
 
     // copy data in buffer to user buffer and return with requested size.
     if (num_in_buf > 0) {
-        n = tcpclient_buffer_read(cli, userbuf, req_size);
+        n = urg3d_tcpclient_buffer_read(cli, userbuf, req_size);
         rem_size = req_size - n;  // lacking size.
         if (rem_size <= 0) {
             return req_size;
         }
 
-        num_in_buf = tcpclient_buffer_data_num(cli);
+        num_in_buf = urg3d_tcpclient_buffer_data_num(cli);
     }
 
     // data in buffer was not enough, read from socket to fill buffer,
     // without blocking, i.e. read from system's buffer.
     {
-        char tmpbuf[BUFSIZE];
+        char tmpbuf[URG3D_BUFSIZE];
         // receive with non-blocking mode.
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
         int no_timeout = 1;
         setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char *)&no_timeout, sizeof(struct timeval));
-        n = recv(sock, tmpbuf, BUFSIZE - num_in_buf, 0);
+        n = recv(sock, tmpbuf, URG3D_BUFSIZE - num_in_buf, 0);
 #else
-        n = recv(sock, tmpbuf, BUFSIZE - num_in_buf, MSG_DONTWAIT);
+        n = recv(sock, tmpbuf, URG3D_BUFSIZE - num_in_buf, MSG_DONTWAIT);
 #endif
         if (n > 0) {
-            tcpclient_buffer_write(cli, tmpbuf, n); // copy socket to my buffer
+            urg3d_tcpclient_buffer_write(cli, tmpbuf, n); // copy socket to my buffer
         }
 
-        n = tcpclient_buffer_read(cli, &userbuf[req_size-rem_size], rem_size);
+        n = urg3d_tcpclient_buffer_read(cli, &userbuf[req_size-rem_size], rem_size);
         // n never be greater than rem_size
         rem_size -= n;
         if (rem_size <= 0) {
@@ -256,7 +256,7 @@ int tcpclient_read(urg_tcpclient_t* cli
 
     //  lastly recv with blocking but with time out to read necessary size.
     {
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
         setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO,
                    (const char *)&timeout, sizeof(struct timeval));
 #else
@@ -277,7 +277,7 @@ int tcpclient_read(urg_tcpclient_t* cli
 }
 
 
-int tcpclient_write(urg_tcpclient_t* cli
+int urg3d_tcpclient_write(urg3d_tcpclient_t* cli
                     , const char* buf
                     , int size)
 {
@@ -286,7 +286,7 @@ int tcpclient_write(urg_tcpclient_t* cli
 }
 
 
-int tcpclient_error(urg_tcpclient_t* cli
+int urg3d_tcpclient_error(urg3d_tcpclient_t* cli
                     , char* error_message
                     , int max_size)
 {
@@ -300,7 +300,7 @@ int tcpclient_error(urg_tcpclient_t* cli
 }
 
 
-int tcpclient_readline(urg_tcpclient_t* cli
+int urg3d_tcpclient_readline(urg3d_tcpclient_t* cli
                        , char* userbuf
                        , int buf_size
                        , int timeout)
@@ -315,7 +315,7 @@ int tcpclient_readline(urg_tcpclient_t* cli
     }
     for (; i < buf_size; ++i) {
         char ch;
-        n = tcpclient_read(cli, &ch, 1, timeout);
+        n = urg3d_tcpclient_read(cli, &ch, 1, timeout);
         if (n <= 0) {
             break; // error
         }

@@ -7,27 +7,27 @@
   $Id$
 */
 
-#include "urg_ring_buffer.h"
+#include "urg3d_ring_buffer.h"
 
 
-void ring_initialize(ring_buffer_t *ring
+void urg3d_ring_initialize(urg3d_ring_buffer_t *ring
                      , char *buffer
                      , const int shift_length)
 {
     ring->buffer = buffer;
     ring->buffer_size = 1 << shift_length;
-    ring_clear(ring);
+    urg3d_ring_clear(ring);
 }
 
 
-void ring_clear(ring_buffer_t *ring)
+void urg3d_ring_clear(urg3d_ring_buffer_t *ring)
 {
     ring->first = 0;
     ring->last = 0;
 }
 
 
-int ring_size(const ring_buffer_t *ring)
+int urg3d_ring_size(const urg3d_ring_buffer_t *ring)
 {
     int first = ring->first;
     int last = ring->last;
@@ -36,7 +36,7 @@ int ring_size(const ring_buffer_t *ring)
 }
 
 
-int ring_capacity(const ring_buffer_t *ring)
+int urg3d_ring_capacity(const urg3d_ring_buffer_t *ring)
 {
     return ring->buffer_size - 1;
 }
@@ -53,11 +53,11 @@ static void byte_move(char *dest
 }
 
 
-int ring_write(ring_buffer_t *ring
+int urg3d_ring_write(urg3d_ring_buffer_t *ring
                , const char *data
                , int size)
 {
-    int free_size = ring_capacity(ring) - ring_size(ring);
+    int free_size = urg3d_ring_capacity(ring) - urg3d_ring_size(ring);
     int push_size = (size > free_size) ? free_size : size;
 
     // storing data
@@ -86,12 +86,12 @@ int ring_write(ring_buffer_t *ring
 }
 
 
-int ring_read(ring_buffer_t *ring
+int urg3d_ring_read(urg3d_ring_buffer_t *ring
               , char *buffer
               , int size)
 {
     // receive data
-    int now_size = ring_size(ring);
+    int now_size = urg3d_ring_size(ring);
     int pop_size = (size > now_size) ? now_size : size;
 
     if (ring->first <= ring->last) {

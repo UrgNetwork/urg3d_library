@@ -1,7 +1,7 @@
 #include "urg3d_sensor.h"
-#include "urg_errno.h"
-#include "urg_ticks.h"
-#if defined(URG_WINDOWS_OS)
+#include "urg3d_errno.h"
+#include "urg3d_ticks.h"
+#if defined(URG3D_WINDOWS_OS)
 #else
 #include <unistd.h>
 #endif
@@ -16,8 +16,8 @@
 //#define DEBUG_HIGH
 
 enum {
-    URG_FALSE = 0,
-    URG_TRUE = 1,
+    URG3D_FALSE = 0,
+    URG3D_TRUE = 1,
 };
 
 int urg3d_open(urg3d_t* const urg
@@ -25,35 +25,30 @@ int urg3d_open(urg3d_t* const urg
                , int port)
 {
     int ret = 0;
-    urg->is_active = URG_FALSE;
-    urg->last_errno = URG_NOT_CONNECTED;
+    urg->is_active = URG3D_FALSE;
+    urg->last_errno = URG3D_NOT_CONNECTED;
     urg->blocking_timeout_ms = 1000;
     urg->nextHeaderReady = 0;
     urg->nextDataReady = 0;
 
     //connect
-    if ((ret = connection_open(&urg->connection, URG_ETHERNET, address, port)) < 0) {
-        urg->last_errno = URG_ETHERNET_OPEN_ERROR;
+    if ((ret = urg3d_connection_open(&urg->connection, URG3D_ETHERNET, address, port)) < 0) {
+        urg->last_errno = URG3D_ETHERNET_OPEN_ERROR;
         return urg->last_errno;
     }
 
-    // stop the acquisition data.
-    if((ret = urg3d_high_stop_data(urg, URG3D_DISTANCE_INTENSITY)) < 0) {
-        return ret;
-    }
-
-    urg->is_active = URG_TRUE;
+    urg->is_active = URG3D_TRUE;
     return 0;
 }
 
 int urg3d_close( urg3d_t* const urg)
 {
-    connection_close(&urg->connection);
-    urg->is_active = URG_FALSE;
+    urg3d_connection_close(&urg->connection);
+    urg->is_active = URG3D_FALSE;
     return 0;
 }
 
-//same urg_ring_buffer.c
+//same urg3d_ring_buffer.c
 static void byte_move(char *dest
                       , const char *src
                       , int n)
@@ -64,13 +59,13 @@ static void byte_move(char *dest
     }
 }
 
-//modified urg_ring_buffer.c
+//modified urg3d_ring_buffer.c
 //no move ring->first
-static int ring_read_pre(ring_buffer_t *ring
+static int urg3d_ring_read_pre(urg3d_ring_buffer_t *ring
                          , char *buffer
                          , int size)
 {
-    int now_size = ring_size(ring);
+    int now_size = urg3d_ring_size(ring);
     int pop_size = (size > now_size) ? now_size : size;
 
     if (ring->first <= ring->last) {
@@ -89,26 +84,26 @@ static int ring_read_pre(ring_buffer_t *ring
     return pop_size;
 }
 
-//modified urg_tcpclient.c
+//modified urg3d_tcpclient.c
 //non-blocking and write all data for ring-buffer
 static void urg3d_read( urg3d_t* const urg)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
-    int num_in_buf = ring_size(&cli->rb);
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
+    int num_in_buf = urg3d_ring_size(&cli->rb);
     int sock       = cli->sock_desc;
     int n;
-    char tmpbuf[BUFSIZE];
+    char tmpbuf[URG3D_BUFSIZE];
 
     // receive with non-blocking mode.
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
     int no_timeout = 1;
     setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&no_timeout, sizeof(struct timeval));
-    n = recv(sock, tmpbuf, BUFSIZE - num_in_buf, 0);
+    n = recv(sock, tmpbuf, URG3D_BUFSIZE - num_in_buf, 0);
 #else
-    n = recv(sock, tmpbuf, BUFSIZE - num_in_buf, MSG_DONTWAIT);
+    n = recv(sock, tmpbuf, URG3D_BUFSIZE - num_in_buf, MSG_DONTWAIT);
 #endif
     if (n > 0) {
-        ring_write(&cli->rb, tmpbuf, n); // copy socket to my buffer
+        urg3d_ring_write(&cli->rb, tmpbuf, n); // copy socket to my buffer
     }
 #ifdef DEBUG_COMMON
     printf("receive_num = %d\n", n);
@@ -117,7 +112,7 @@ static void urg3d_read( urg3d_t* const urg)
 
 int urg3d_next_receive_ready( urg3d_t* const urg)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
     char VSSP_trush[4] = {0};
 
     //need
@@ -126,30 +121,30 @@ int urg3d_next_receive_ready( urg3d_t* const urg)
     if(urg->nextHeaderReady == 0) {
         //search VSSP
         while(1) {
-            if(ring_size(&cli->rb) <= 4) {
+            if(urg3d_ring_size(&cli->rb) <= 4) {
                 return 0;
             }
-            ring_read_pre(&cli->rb, VSSP_trush,  4);
+            urg3d_ring_read_pre(&cli->rb, VSSP_trush,  4);
             if(strncmp(VSSP_trush, "VSSP", 4) == 0) {
                 break;
             } else {
-                ring_read(&cli->rb, VSSP_trush, 1);
+                urg3d_ring_read(&cli->rb, VSSP_trush, 1);
             }
         }
 
         //check VSSP header length
-        if(ring_size(&cli->rb) < URG3D_VSSP_HEADER_LENGTH) {
+        if(urg3d_ring_size(&cli->rb) < URG3D_VSSP_HEADER_LENGTH) {
             return 0;
         } else {
             //pre read VSSP header
-            ring_read_pre(&cli->rb, (char*)(&urg->nextHeader), URG3D_VSSP_HEADER_LENGTH);
+            urg3d_ring_read_pre(&cli->rb, (char*)(&urg->nextHeader), URG3D_VSSP_HEADER_LENGTH);
             urg->nextHeaderReady = 1;
         }
     }
 
     if(urg->nextDataReady == 0) {
         //check data length
-        if(ring_size(&cli->rb) < ((*(unsigned short *)(urg->nextHeader + 14)))) {
+        if(urg3d_ring_size(&cli->rb) < ((*(unsigned short *)(urg->nextHeader + 14)))) {
             return 0;
         } else {
             urg->nextDataReady = 1;
@@ -167,7 +162,7 @@ static void urg3d_next_receive_flag_clear( urg3d_t* const urg)
 int urg3d_low_request_command( urg3d_t* const urg
                                , const char* const command)
 {
-    return connection_write(&urg->connection, command, strlen(command));
+    return urg3d_connection_write(&urg->connection, command, strlen(command));
 }
 
 int urg3d_low_get_binary( urg3d_t* const urg
@@ -175,7 +170,7 @@ int urg3d_low_get_binary( urg3d_t* const urg
                           , char* const data
                           , int* const length_data)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
     int ret = 0;
 
     if((ret = urg3d_next_receive_ready(urg)) <= 0) {
@@ -183,10 +178,10 @@ int urg3d_low_get_binary( urg3d_t* const urg
     }
 
     //copy
-    ring_read(&cli->rb, (char*)header, URG3D_VSSP_HEADER_LENGTH);
+    urg3d_ring_read(&cli->rb, (char*)header, URG3D_VSSP_HEADER_LENGTH);
     *length_data = header->length - header->header_length;
     if(*length_data != 0) {
-        ring_read(&cli->rb, (char*)data, *length_data);
+        urg3d_ring_read(&cli->rb, (char*)data, *length_data);
     }
     data[*length_data] = '\0';
 
@@ -215,17 +210,17 @@ static int urg3d_low_get_ri_ro_common( urg3d_t* const urg
                                        , urg3d_range_header_t* const range_header
                                        , urg3d_range_index_t* const range_index)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
     char buf[URG3D_MAX_RX_LENGTH] = {0};
 
     //copy
-    ring_read(&cli->rb, (char*)header, URG3D_VSSP_HEADER_LENGTH);
+    urg3d_ring_read(&cli->rb, (char*)header, URG3D_VSSP_HEADER_LENGTH);
 
     //copy range_header
-    ring_read(&cli->rb, buf, 2);
+    urg3d_ring_read(&cli->rb, buf, 2);
     range_header->header_length = (*(unsigned short *)(buf + 0));
     //*** CAUTION *** sizeof(range_header) != 20
-    ring_read(&cli->rb, buf, range_header->header_length -2);
+    urg3d_ring_read(&cli->rb, buf, range_header->header_length -2);
     range_header->line_head_timestamp_ms = (*(unsigned int *)(buf + 0));
     range_header->line_tail_timestamp_ms = (*(unsigned int *)(buf + 4));
     range_header->line_head_h_angle_ratio = (*(signed short *)(buf + 8));
@@ -244,14 +239,14 @@ static int urg3d_low_get_ri_ro_common( urg3d_t* const urg
     }
 
     //copy range_index
-    ring_read(&cli->rb, buf, 4);
+    urg3d_ring_read(&cli->rb, buf, 4);
     range_index->index_length = (*(unsigned short *)(buf + 0));
     range_index->nspots = (*(unsigned short *)(buf + 2));
-    ring_read(&cli->rb, (char*)(&range_index->index), (range_index->nspots+1) * sizeof(unsigned short));
+    urg3d_ring_read(&cli->rb, (char*)(&range_index->index), (range_index->nspots+1) * sizeof(unsigned short));
 
     //skip reserve
     if(range_index->nspots % 2 == 0) {
-        ring_read(&cli->rb, buf, 2);
+        urg3d_ring_read(&cli->rb, buf, 2);
     }
 
     return 1;
@@ -262,7 +257,7 @@ int urg3d_low_get_ri( urg3d_t* const urg, urg3d_vssp_header_t* const header
                       , urg3d_range_index_t* const range_index
                       , urg3d_data_range_intensity_t* const data_range_intensity)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
     int ret = 0;
 
     if((ret = urg3d_next_receive_ready(urg)) <= 0) {
@@ -278,7 +273,7 @@ int urg3d_low_get_ri( urg3d_t* const urg, urg3d_vssp_header_t* const header
     urg3d_low_get_ri_ro_common(urg, header, range_header, range_index);
 
     //copy data_range_intensity
-    ring_read(&cli->rb, (char*)data_range_intensity, range_index->index[range_index->nspots] * sizeof(urg3d_raw_range_intensity_t));
+    urg3d_ring_read(&cli->rb, (char*)data_range_intensity, range_index->index[range_index->nspots] * sizeof(urg3d_raw_range_intensity_t));
 
     urg3d_next_receive_flag_clear(urg);
 
@@ -323,7 +318,7 @@ int urg3d_low_get_ro( urg3d_t* const urg
                       , urg3d_range_index_t* const range_index
                       , urg3d_data_range_t* const data_range)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
     int ret = 0;
 
     if((ret = urg3d_next_receive_ready(urg)) <= 0) {
@@ -339,7 +334,7 @@ int urg3d_low_get_ro( urg3d_t* const urg
     urg3d_low_get_ri_ro_common(urg, header, range_header, range_index);
 
     //copy data_range
-    ring_read(&cli->rb, (char*)data_range, range_index->index[range_index->nspots] * sizeof(urg3d_raw_range_t));
+    urg3d_ring_read(&cli->rb, (char*)data_range, range_index->index[range_index->nspots] * sizeof(urg3d_raw_range_t));
 
     urg3d_next_receive_flag_clear(urg);
 
@@ -383,7 +378,7 @@ int urg3d_low_get_ax( urg3d_t* const urg
                       , urg3d_ax_header_t* const ax_header
                       , urg3d_data_ax_t* const ax_data)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
     int ret = 0, count = 0;
     char buf[URG3D_MAX_RX_LENGTH] = {0};
 
@@ -397,11 +392,11 @@ int urg3d_low_get_ax( urg3d_t* const urg
     }
 
     //copy vssp_header
-    ring_read(&cli->rb, (char*)header, URG3D_VSSP_HEADER_LENGTH);
+    urg3d_ring_read(&cli->rb, (char*)header, URG3D_VSSP_HEADER_LENGTH);
 
     //copy ax_header
     //*** CAUTION *** sizeof(ax_header) != 12
-    ring_read(&cli->rb, buf, 12);
+    urg3d_ring_read(&cli->rb, buf, 12);
     ax_header->header_length = (*(unsigned short *)(buf + 0));
     ax_header->timestamp_ms = (*(unsigned int *)(buf + 2));
     ax_header->data_bitfield = (*(unsigned int *)(buf + 6));
@@ -410,7 +405,7 @@ int urg3d_low_get_ax( urg3d_t* const urg
 
     //copy ax_data
     count = (header->length - header->header_length - ax_header->header_length) / sizeof(signed int);
-    ring_read(&cli->rb, (char*)(ax_data->value), count * sizeof(signed int));
+    urg3d_ring_read(&cli->rb, (char*)(ax_data->value), count * sizeof(signed int));
 
     urg3d_next_receive_flag_clear(urg);
 
@@ -441,8 +436,8 @@ int urg3d_low_get_ax( urg3d_t* const urg
 
 void urg3d_low_purge(urg3d_t * const urg)
 {
-    urg_tcpclient_t *cli = &urg->connection.tcpclient;
-    ring_clear(&cli->rb);
+    urg3d_tcpclient_t *cli = &urg->connection.tcpclient;
+    urg3d_ring_clear(&cli->rb);
 }
 
 static int urg3d_high_blocking_common(urg3d_t *urg, urg3d_vssp_header_t* const header
@@ -458,7 +453,7 @@ static int urg3d_high_blocking_common(urg3d_t *urg, urg3d_vssp_header_t* const h
         return -1;
     }
 
-    start_time_ms = ticks_ms();
+    start_time_ms = urg3d_ticks_ms();
     while(1) {
         while(urg3d_low_get_binary(urg, header, data, &length_data) > 0) {
             if(strncmp(header->type, "ERR", 3) == 0) {
@@ -473,10 +468,10 @@ static int urg3d_high_blocking_common(urg3d_t *urg, urg3d_vssp_header_t* const h
                 }
             }
         }
-        if(ticks_ms() - start_time_ms >= urg->blocking_timeout_ms) {
+        if(urg3d_ticks_ms() - start_time_ms >= urg->blocking_timeout_ms) {
             return -2;
         }
-#ifdef URG_WINDOWS_OS
+#ifdef URG3D_WINDOWS_OS
         Sleep(10);
 #else
         usleep(10000);
@@ -523,7 +518,7 @@ int urg3d_high_blocking_init(urg3d_t * const urg)
     char data[URG3D_MAX_RX_LENGTH] = {0};
     double intl = 0;
 
-    for(i = 0; i < URG3D_MAX_V_INTERLACE_COUN; ++i) {
+    for(i = 0; i < URG3D_MAX_V_INTERLACE_COUNT; ++i) {
         urg->spot_v_angle_loaded[i] = 0;
     }
 
@@ -720,7 +715,7 @@ int urg3d_high_blocking_set_horizontal_interlace_count(urg3d_t *const urg
     char command[URG3D_MAX_TX_LENGTH] = {0};
 
     //check
-    if(count < 1 || count > URG3D_MAX_H_INTERLACE_COUN) {
+    if(count < 1 || count > URG3D_MAX_H_INTERLACE_COUNT) {
         return -1;
     }
 
@@ -744,7 +739,7 @@ int urg3d_high_blocking_set_vertical_interlace_count(urg3d_t *const urg
     double intl = 0;
 
     //check
-    if(count < 1 || count > URG3D_MAX_V_INTERLACE_COUN) {
+    if(count < 1 || count > URG3D_MAX_V_INTERLACE_COUNT) {
         return -1;
     }
 

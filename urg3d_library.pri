@@ -13,18 +13,18 @@
                 $$PWD/include
 
     HEADERS += \
-        $$PWD/include/urg_connection.h \
-        $$PWD/include/urg_detect_os.h \
-        $$PWD/include/urg_errno.h \
-        $$PWD/include/urg_ring_buffer.h \
-        $$PWD/include/urg_tcpclient.h \
-        $$PWD/include/urg_ticks.h \
-        $$PWD/include/urg3d_sensor.h
+        $$PWD/include/urg3d_sensor.h \
+        $$PWD/include/urg3d_connection.h \
+        $$PWD/include/urg3d_detect_os.h \
+        $$PWD/include/urg3d_errno.h \
+        $$PWD/include/urg3d_ring_buffer.h \
+        $$PWD/include/urg3d_tcpclient.h \
+        $$PWD/include/urg3d_ticks.h
 
     SOURCES += \
-        $$PWD/src/urg_connection.c \
-        $$PWD/src/urg_ring_buffer.c \
-        $$PWD/src/urg_tcpclient.c \
-        $$PWD/src/urg_ticks.c \
-        $$PWD/src/urg3d_sensor.c
+        $$PWD/src/urg3d_sensor.c \
+        $$PWD/src/urg3d_connection.c \
+        $$PWD/src/urg3d_ring_buffer.c \
+        $$PWD/src/urg3d_tcpclient.c \
+        $$PWD/src/urg3d_ticks.c
 }

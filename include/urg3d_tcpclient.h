@@ -1,5 +1,5 @@
-#ifndef URG_TCPCLIENT_H
-#define URG_TCPCLIENT_H
+#ifndef URG3D_TCPCLIENT_H
+#define URG3D_TCPCLIENT_H
 
 /*!
   \file
@@ -7,17 +7,17 @@
 
   \author Katsumi Kimoto
 
-  $Id: urg_tcpclient.h,v 1d233c7a2240 2011/02/19 03:08:45 Satofumi $
+  $Id: urg3d_tcpclient.h,v 1d233c7a2240 2011/02/19 03:08:45 Satofumi $
 */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "urg_ring_buffer.h"
-#include "urg_detect_os.h"
+#include "urg3d_ring_buffer.h"
+#include "urg3d_detect_os.h"
 #include <sys/types.h>
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
 //#ifndef WIN32_LEAN_AND_MEAN
 //#define WIN32_LEAN_AND_MEAN 1
 //#endif
@@ -35,17 +35,17 @@ extern "C" {
 
 
 // -- NOT INTERFACE, for internal use only --
-// For urg_ringbuffer.h
+// For urg3d_ringbuffer.h
 // The size of buffer must be specified by the power of 2
-// i.e. ring buffer size = two to the RB_BITSHIFT-th power.
+// i.e. ring buffer size = two to the URG3D_RB_BITSHIFT-th power.
 enum {
-//    RB_BITSHIFT = 8,   //2014-10-23 Doog
-    RB_BITSHIFT = URG3D_MAX_RX_BUFFER_BIT,
-    RB_SIZE = 1 << RB_BITSHIFT,
+//    URG3D_RB_BITSHIFT = 8,   //2014-10-23 Doog
+    URG3D_RB_BITSHIFT = URG3D_MAX_RX_BUFFER_BIT,
+    URG3D_RB_SIZE = 1 << URG3D_RB_BITSHIFT,
 
     // caution ! available buffer size is less than the
-    // size given to the ring buffer(RB_SIZE).
-    BUFSIZE = RB_SIZE - 1,
+    // size given to the ring buffer(URG3D_RB_SIZE).
+    URG3D_BUFSIZE = URG3D_RB_SIZE - 1,
 };
 
 
@@ -57,13 +57,13 @@ typedef struct {
     int sock_addr_size;
 
     // buffer
-    ring_buffer_t rb;
-    char buf[RB_SIZE];
+    urg3d_ring_buffer_t rb;
+    char buf[URG3D_RB_SIZE];
 
     // line reading functions
     int pushed_back; // for pushded back char
 
-} urg_tcpclient_t;
+} urg3d_tcpclient_t;
 // -- end of NON INTERFACE definitions --
 
 
@@ -78,7 +78,7 @@ typedef struct {
   \retval 0 succeeded.
   \retval -1 error
 */
-extern int tcpclient_open(urg_tcpclient_t* cli,
+extern int urg3d_tcpclient_open(urg3d_tcpclient_t* cli,
                           const char* server_ip_str, int port_num);
 
 
@@ -87,7 +87,7 @@ extern int tcpclient_open(urg_tcpclient_t* cli,
 
   \param[in,out] cli : tcp client type variable which must be deallocated by a caller after closing.
 */
-extern void tcpclient_close(urg_tcpclient_t* cli);
+extern void urg3d_tcpclient_close(urg3d_tcpclient_t* cli);
 
 
 /*!
@@ -101,10 +101,10 @@ extern void tcpclient_close(urg_tcpclient_t* cli);
   \return the number of data read, -1 when error.
 */
 
-extern int tcpclient_read(urg_tcpclient_t* cli,
+extern int urg3d_tcpclient_read(urg3d_tcpclient_t* cli,
                           char* userbuf, int req_size, int timeout);
 
-extern int tcpclient_read_and_set_ringbuffer(urg_tcpclient_t* cli);
+extern int urg3d_tcpclient_read_and_set_ringbuffer(urg3d_tcpclient_t* cli);
 
 
 /*!
@@ -116,12 +116,12 @@ extern int tcpclient_read_and_set_ringbuffer(urg_tcpclient_t* cli);
 
   \return returns the number of data wrote, -1 when error.
 */
-extern int tcpclient_write(urg_tcpclient_t* cli,
+extern int urg3d_tcpclient_write(urg3d_tcpclient_t* cli,
                            const char* userbuf, int req_size);
 
 
 //! \attention not implemented yet.
-extern int tcpclient_error(urg_tcpclient_t* cli,
+extern int urg3d_tcpclient_error(urg3d_tcpclient_t* cli,
                            char* error_message, int max_size);
 
 
@@ -135,11 +135,11 @@ extern int tcpclient_error(urg_tcpclient_t* cli,
 
   \return the number of data read, -1 when error.
 */
-extern int tcpclient_readline(urg_tcpclient_t* cli,
+extern int urg3d_tcpclient_readline(urg3d_tcpclient_t* cli,
                               char* userbuf, int buf_size, int timeout);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* !URG_TCPCLIENT_H */
+#endif /* !URG3D_TCPCLIENT_H */

@@ -1,15 +1,15 @@
-#include "urg_ticks.h"
-#include "urg_detect_os.h"
+#include "urg3d_ticks.h"
+#include "urg3d_detect_os.h"
 #include <time.h>
 
-#ifdef URG_MAC_OS
+#ifdef URG3D_MAC_OS
 #include <mach/clock.h>
 #include <mach/mach.h>
 #endif
 
 void gettime(struct timespec *ts)
 {
-  #ifdef URG_MAC_OS // OS X does not have clock_gettime, use clock_get_time
+  #ifdef URG3D_MAC_OS // OS X does not have clock_gettime, use clock_get_time
   clock_serv_t cclock;
   mach_timespec_t mts;
   host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
@@ -19,17 +19,17 @@ void gettime(struct timespec *ts)
   ts->tv_nsec = mts.tv_nsec;
 
   #else
-  #ifndef URG_WINDOWS_OS
+  #ifndef URG3D_WINDOWS_OS
   clock_gettime(CLOCK_REALTIME, ts);
   #endif
   #endif
 }
 
 
-long ticks_ms(void)
+long urg3d_ticks_ms(void)
 {
     static int is_initialized = 0;
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
     clock_t current_clock;
 #else
     static struct timespec first_spec;
@@ -37,7 +37,7 @@ long ticks_ms(void)
 #endif
     long time_ms;
 
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
     if (is_initialized == 0) {
         is_initialized = 1;
     }
