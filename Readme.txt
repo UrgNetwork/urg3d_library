@@ -62,27 +62,27 @@ Library usage:
 
 Header and Source List:
 
- ## urg_connection.h, urg_connection.c ##
+ ## urg3d_connection.h, urg3d_connection.c ##
 
   functions to handle communication with urg sensor (serial/ethernet)
 
- ## urg_detect_os.h ##
+ ## urg3d_detect_os.h ##
 
   header to detect OS type
 
- ## urg_errno.h ##
+ ## urg3d_errno.h ##
 
   header for error code
 
- ## urg_ring_buffer.h, urg_ring_buffer.c ##
+ ## urg3d_ring_buffer.h, urg3d_ring_buffer.c ##
 
   functions to handle ring buffer
 
- ## urg_tcpclient.h, urg_tcpclient.c ##
+ ## urg3d_tcpclient.h, urg3d_tcpclient.c ##
 
    functions to handle ethernet communication
 
- ## urg_ticks.h, urg_ticks.c ##
+ ## urg3d_ticks.h, urg3d_ticks.c ##
 
    functions to handle timer
 

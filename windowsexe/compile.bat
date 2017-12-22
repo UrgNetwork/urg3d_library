@@ -7,12 +7,12 @@ CALL vsvars32.bat
 REM Compile URG library
 
 cl.exe -c -MD -I../include ../src/urg3d_sensor.c
-cl.exe -c -MD -I../include ../src/urg_connection.c
-cl.exe -c -MD -I../include ../src/urg_tcpclient.c
-cl.exe -c -MD -I../include ../src/urg_ring_buffer.c
-cl.exe -c -MD -I../include ../src/urg_ticks.c
+cl.exe -c -MD -I../include ../src/urg3d_connection.c
+cl.exe -c -MD -I../include ../src/urg3d_tcpclient.c
+cl.exe -c -MD -I../include ../src/urg3d_ring_buffer.c
+cl.exe -c -MD -I../include ../src/urg3d_ticks.c
 
-lib.exe /OUT:urg3d.lib urg3d_sensor.obj urg_connection.obj urg_tcpclient.obj urg_ring_buffer.obj urg_ticks.obj
+lib.exe /OUT:urg3d.lib urg3d_sensor.obj urg3d_connection.obj urg3d_tcpclient.obj urg3d_ring_buffer.obj urg3d_ticks.obj
 
 REM Compile samples linking with ws2_32.lib setupapi.lib with /MD option.
 
@@ -29,11 +29,11 @@ cl.exe /MD -I../include ../samples/low_get_ro.c ws2_32.lib setupapi.lib urg3d.li
 cl.exe /MD -I../include ../samples/low_get_ro_with_error_reboot.c ws2_32.lib setupapi.lib urg3d.lib
 cl.exe /MD -I../include ../samples/low_user_request.c ws2_32.lib setupapi.lib urg3d.lib
 
-echo ƒrƒ‹ƒh‚ªŠ®—¹‚µ‚Ü‚µ‚½BI—¹‚µ‚Ü‚·B
+echo ï¿½rï¿½ï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½Bï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 set /p TMP=""
 exit /b
 
 :end
-echo vsvars32.bat ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBI—¹‚µ‚Ü‚·B
+echo vsvars32.bat ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Bï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
 set /p TMP=""
 exit /b
