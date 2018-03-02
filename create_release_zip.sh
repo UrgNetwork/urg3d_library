@@ -1,6 +1,6 @@
 #!/bin/sh
 
-RELEASE_DIR=urg3d_library-1.0.3
+RELEASE_DIR=urg3d_library-1.1.0
 PACKAGE_NAME=${RELEASE_DIR}.zip
 
 copy_files () {
