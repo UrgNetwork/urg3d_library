@@ -1,4 +1,4 @@
-﻿URG3D Library
+URG3D Library
 
 About this software:
   このソフトウェアは北陽電機株式会社の三次元測域センサを利用するためのライブラリです。
@@ -99,32 +99,32 @@ Header and Source List:
   ## urg3d_connection.h, urg3d_connection.c ##
 
      イーサネットとシリアルポートに対応した接続機能
-     （urg3d_libraryからの移植で改変なし）
+     （urg_libraryからの移植で改変なし）
 
   ## urg3d_detect_os.h ##
 
      OS識別機能
-     （urg3d_libraryからの移植で、Windows用のM_PIはここへ記載）
+     （urg_libraryからの移植で、Windows用のM_PIはここへ記載）
 
   ## urg3d_errno.h ##
 
      エラー番号定義
-     （urg3d_libraryからの移植で改変なし）
+     （urg_libraryからの移植で改変なし）
 
   ## urg3d_ring_buffer.h, urg3d_ring_buffer.c ##
 
      リングバッファ機能
-     （urg3d_libraryからの移植で改変なし）
+     （urg_libraryからの移植で改変なし）
 
   ## urg3d_tcpclient.h, urg3d_tcpclient.c ##
 
      イーサネットによる通信機能
-     （urg3d_libraryからの移植で、URG3D_MAX_RX_BUFFER_BITを12bitから16bitへ増やした）
+     （urg_libraryからの移植で、URG3D_MAX_RX_BUFFER_BITを12bitから16bitへ増やした）
 
   ## urg3d_ticks.h, urg3d_ticks.c ##
 
      複数OSに対応した時刻機能
-     （urg3d_libraryからの移植で、tick_ms()を利用する構成に修正）
+     （urg_libraryからの移植で、tick_ms()を利用する構成に修正）
 
   ## urg3d_sensor.h, urg3d_sensor.c ##
 
