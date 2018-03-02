@@ -1,9 +1,10 @@
 #ifndef URG3D_SENSOR_H
 #define URG3D_SENSOR_H
 
+#define URG3D_STATUS_LENGTH              (3)
 #define URG3D_MAX_SPOTS_COUNT           (74)
-#define URG3D_MAX_V_INTERLACE_COUN      (10)
-#define URG3D_MAX_H_INTERLACE_COUN      (20)
+#define URG3D_MAX_V_INTERLACE_COUNT     (10)
+#define URG3D_MAX_H_INTERLACE_COUNT     (20)
 #define URG3D_MAX_ECHOS_COUNT           (4)
 #define URG3D_MAX_TYPE_COUNT            (32)
 #define URG3D_MAX_AUX_COUNT             (255)
@@ -12,13 +13,13 @@
 #define URG3D_MAX_TX_LENGTH             (64)
 #define URG3D_VSSP_HEADER_LENGTH        (24)
 
-//#define URG3D_MAX_RX_BUFFER_BIT -> "urg_tcpclient.h"
+//#define URG3D_MAX_RX_BUFFER_BIT -> "urg3d_tcpclient.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-    #include "urg_connection.h"
-    #include "urg_ring_buffer.h"
+    #include "urg3d_connection.h"
+    #include "urg3d_ring_buffer.h"
 
     /*!
       ==================== 3D-URG Common ====================
@@ -29,7 +30,7 @@ extern "C" {
         int is_active;
         int last_errno;
         int blocking_timeout_ms;
-        urg_connection_t connection;
+        urg3d_connection_t connection;
 
         //vssp buffering
         char nextHeaderReady;
@@ -38,10 +39,10 @@ extern "C" {
 
         //transform tables
         double spot_h_angle_ratio[URG3D_MAX_SPOTS_COUNT];
-        double spot_v_angle_rad[URG3D_MAX_V_INTERLACE_COUN][URG3D_MAX_V_INTERLACE_COUN][URG3D_MAX_SPOTS_COUNT];
-        double cos_v_angle_rad[URG3D_MAX_V_INTERLACE_COUN][URG3D_MAX_V_INTERLACE_COUN][URG3D_MAX_SPOTS_COUNT];
-        double sin_v_angle_rad[URG3D_MAX_V_INTERLACE_COUN][URG3D_MAX_V_INTERLACE_COUN][URG3D_MAX_SPOTS_COUNT];
-        char spot_v_angle_loaded[URG3D_MAX_V_INTERLACE_COUN];
+        double spot_v_angle_rad[URG3D_MAX_V_INTERLACE_COUNT][URG3D_MAX_V_INTERLACE_COUNT][URG3D_MAX_SPOTS_COUNT];
+        double cos_v_angle_rad[URG3D_MAX_V_INTERLACE_COUNT][URG3D_MAX_V_INTERLACE_COUNT][URG3D_MAX_SPOTS_COUNT];
+        double sin_v_angle_rad[URG3D_MAX_V_INTERLACE_COUNT][URG3D_MAX_V_INTERLACE_COUNT][URG3D_MAX_SPOTS_COUNT];
+        char spot_v_angle_loaded[URG3D_MAX_V_INTERLACE_COUNT];
     } urg3d_t;
 
     /*!
@@ -251,7 +252,7 @@ extern "C" {
         unsigned char  v_field_number;
         unsigned short line_number;
         unsigned short spot_count;
-        char           status[3]; //without LF
+        char           status[URG3D_STATUS_LENGTH]; //without LF
     } urg3d_measurement_data_t;
 
     typedef struct {

@@ -1,6 +1,6 @@
 #include "urg3d_sensor.h"
 #include <string.h>
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
 #else
 #include <unistd.h>
 #endif
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
      */
     if((ret = urg3d_open(&urg,  device, port)) < 0) {
         printf("error urg3d_open %d\n", ret);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     if((ret = urg3d_low_request_command(&urg, "DAT:ro=1\n")) < 0) {
         printf("error urg3d_low_request_command %d\n", ret);
         ret = urg3d_close(&urg);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
                 }
             }
         } else {
-            #ifdef URG_WINDOWS_OS
+            #ifdef URG3D_WINDOWS_OS
                 Sleep(10);
             #else
                 usleep(10000);
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     if((ret = urg3d_low_request_command(&urg, "DAT:ro=0\n")) < 0) {
         printf("error urg3d_low_request_command %d\n", ret);
         ret = urg3d_close(&urg);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
      */
     if((ret = urg3d_close(&urg)) < 0) {
         printf("error urg3d_close %d\n", ret);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
         printf("close ok\n");
     }
 
-#if defined(URG_MSC)
+#if defined(URG3D_MSC)
     getchar();
 #endif
     return 0;

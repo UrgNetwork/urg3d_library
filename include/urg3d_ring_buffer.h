@@ -1,5 +1,5 @@
-#ifndef URG_RING_BUFFER_H
-#define URG_RING_BUFFER_H
+#ifndef URG3D_RING_BUFFER_H
+#define URG3D_RING_BUFFER_H
 
 /*!
   \file
@@ -7,7 +7,7 @@
 
   \author Satofumi KAMIMURA
 
-  $Id: urg_ring_buffer.h,v acb362e60f78 2014/09/10 05:36:24 jun $
+  $Id: urg3d_ring_buffer.h,v acb362e60f78 2014/09/10 05:36:24 jun $
 */
 
 #ifdef __cplusplus
@@ -21,7 +21,7 @@ typedef struct
     int buffer_size;              //!< buffer size
     int first;                    //!< start point of buffer
     int last;                     //!< end point of buffer
-} ring_buffer_t;
+} urg3d_ring_buffer_t;
 
 
 /*!
@@ -31,7 +31,7 @@ typedef struct
   \param[in] buffer memory for ring buffer
   \param[in] shift_length log2-scaled buffer size (buffer size is 2^{shift_length})
 */
-extern void ring_initialize(ring_buffer_t *ring,
+extern void urg3d_ring_initialize(urg3d_ring_buffer_t *ring,
                             char *buffer, const int shift_length);
 
 
@@ -40,7 +40,7 @@ extern void ring_initialize(ring_buffer_t *ring,
 
   \param[in] ring handler
 */
-extern void ring_clear(ring_buffer_t *ring);
+extern void urg3d_ring_clear(urg3d_ring_buffer_t *ring);
 
 
 /*!
@@ -48,7 +48,7 @@ extern void ring_clear(ring_buffer_t *ring);
 
   \param[in] ring handler
 */
-extern int ring_size(const ring_buffer_t *ring);
+extern int urg3d_ring_size(const urg3d_ring_buffer_t *ring);
 
 
 /*!
@@ -56,7 +56,7 @@ extern int ring_size(const ring_buffer_t *ring);
 
   \param[in] ring handler
 */
-extern int ring_capacity(const ring_buffer_t *ring);
+extern int urg3d_ring_capacity(const urg3d_ring_buffer_t *ring);
 
 
 /*!
@@ -68,7 +68,7 @@ extern int ring_capacity(const ring_buffer_t *ring);
 
   \return amount of stored data
 */
-extern int ring_write(ring_buffer_t *ring, const char *data, int size);
+extern int urg3d_ring_write(urg3d_ring_buffer_t *ring, const char *data, int size);
 
 
 /*!
@@ -80,10 +80,10 @@ extern int ring_write(ring_buffer_t *ring, const char *data, int size);
 
   \return amount of read data
 */
-extern int ring_read(ring_buffer_t *ring, char *buffer, int size);
+extern int urg3d_ring_read(urg3d_ring_buffer_t *ring, char *buffer, int size);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ! RING_BUFFER_H */
+#endif /* ! urg3d_ring_BUFFER_H */

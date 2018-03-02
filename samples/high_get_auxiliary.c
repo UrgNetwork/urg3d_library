@@ -1,6 +1,6 @@
 #include "urg3d_sensor.h"
 #include <string.h>
-#if defined(URG_WINDOWS_OS)
+#if defined(URG3D_WINDOWS_OS)
 #else
 #include <unistd.h>
 #endif
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
     // connect to sensor
     if((ret = urg3d_open(&urg,  device, port)) < 0) {
         printf("error urg3d_open %d\n", ret);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
     if((ret = urg3d_high_start_data(&urg, URG3D_AUXILIARY)) < 0) {
         printf("error urg3d_high_start_data %d\n", ret);
         ret = urg3d_close(&urg);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
 
 
         } else {
-            #ifdef URG_WINDOWS_OS
+            #ifdef URG3D_WINDOWS_OS
                 Sleep(10);
             #else
                 usleep(10000);
@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
     if((ret = urg3d_high_stop_data(&urg, URG3D_AUXILIARY)) < 0) {
         printf("error urg3d_high_stop_data %d\n", ret);
         ret = urg3d_close(&urg);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
     // close the connection with sensor
     if((ret = urg3d_close(&urg)) < 0) {
         printf("error urg3d_close %d\n", ret);
-        #if defined(URG_MSC)
+        #if defined(URG3D_MSC)
             getchar();
         #endif
         return -1;
@@ -322,7 +322,7 @@ int main(int argc, char *argv[])
     save_valid_yvt_sensor_ax_data(file_descriptor);
     fclose(file_descriptor);
 
-#if defined(URG_MSC)
+#if defined(URG3D_MSC)
     getchar();
 #endif
     return 0;
