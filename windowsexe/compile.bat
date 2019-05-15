@@ -29,11 +29,11 @@ cl.exe /MD -I../include ../samples/low_get_ro.c ws2_32.lib setupapi.lib urg3d.li
 cl.exe /MD -I../include ../samples/low_get_ro_with_error_reboot.c ws2_32.lib setupapi.lib urg3d.lib
 cl.exe /MD -I../include ../samples/low_user_request.c ws2_32.lib setupapi.lib urg3d.lib
 
-echo ãƒ“ãƒ«ãƒ‰ãŒå®Œäº†ã—ã¾ã—ãŸã€‚çµ‚äº†ã—ã¾ã™ã€‚
+echo ƒrƒ‹ƒh‚ªŠ®—¹‚µ‚Ü‚µ‚½BI—¹‚µ‚Ü‚·B
 set /p TMP=""
 exit /b
 
 :end
-echo vsvars32.bat ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã€‚çµ‚äº†ã—ã¾ã™ã€‚
+echo vsvars32.bat ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñBI—¹‚µ‚Ü‚·B
 set /p TMP=""
 exit /b
