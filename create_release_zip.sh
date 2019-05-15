@@ -1,6 +1,7 @@
 #!/bin/sh
 
-RELEASE_DIR=urg3d_library-1.1.0
+VERSION=`grep version= urg3d-config.in | cut -d= -f2`
+RELEASE_DIR=urg3d_library-${VERSION}
 PACKAGE_NAME=${RELEASE_DIR}.zip
 
 copy_files () {

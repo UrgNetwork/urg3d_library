@@ -12,3 +12,6 @@ ipch/
 *.suo
 *.opensdf
 urg3d-config
+tags
+*.zip
+*.bak
