@@ -29,11 +29,11 @@ cl.exe /MD -I../include ../samples/low_get_ro.c ws2_32.lib setupapi.lib urg3d.li
 cl.exe /MD -I../include ../samples/low_get_ro_with_error_reboot.c ws2_32.lib setupapi.lib urg3d.lib
 cl.exe /MD -I../include ../samples/low_user_request.c ws2_32.lib setupapi.lib urg3d.lib
 
-echo �r���h���������܂����B�I�����܂��B
+echo ビルドが完了しました。終了します。
 set /p TMP=""
 exit /b
 
 :end
-echo vsvars32.bat ��������܂���B�I�����܂��B
+echo vsvars32.bat が見つかりません。終了します。
 set /p TMP=""
 exit /b
