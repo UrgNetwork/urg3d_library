@@ -37,6 +37,20 @@ int urg3d_open(urg3d_t* const urg
         return urg->last_errno;
     }
 
+    // stop the _ro/_ri data acquisition.
+    if ((ret = urg3d_high_stop_data(urg, URG3D_DISTANCE_INTENSITY)) < 0) {
+        urg3d_connection_close(&urg->connection);
+        urg->last_errno = URG3D_INVALID_RESPONSE;
+        return urg->last_errno;
+    }
+
+    // stop the _ax data acquisition.
+    if ((ret = urg3d_high_stop_data(urg, URG3D_AUXILIARY)) < 0) {
+        urg3d_connection_close(&urg->connection);
+        urg->last_errno = URG3D_INVALID_RESPONSE;
+        return urg->last_errno;
+    }
+
     urg->is_active = URG3D_TRUE;
     return 0;
 }
@@ -788,6 +802,26 @@ int urg3d_high_stop_data(urg3d_t* const urg
         return 0;
     }
     return urg3d_low_request_command(urg, command_list[meas]);
+}
+
+int urg3d_high_blocking_stop_data(urg3d_t* const urg
+    , urg3d_measurement_type_t meas)
+{
+    urg3d_vssp_header_t header;
+    char data[URG3D_MAX_RX_LENGTH] = { 0 };
+    const char command_list[4][10] = { "", "DAT:ro=0\n", "DAT:ri=0\n", "DAT:ax=0\n" };
+    int ret = 0;
+
+    if (meas == URG3D_NO_REQUEST) {
+        return 0;
+    }
+
+    ret = urg3d_high_blocking_common(urg, &header, data, command_list[meas], "DAT", command_list[meas]);
+    if (ret < 0) {
+        return ret;
+    }
+
+    return 1;
 }
 
 int urg3d_high_get_measurement_data(urg3d_t * const urg
