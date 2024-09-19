@@ -211,6 +211,13 @@ int main(int argc, char *argv[])
         printf("send success -> DAT:ro=0\n");
     }
 
+    // wait stop
+    #ifdef URG3D_WINDOWS_OS
+        Sleep(1000);
+    #else
+        usleep(1000000);
+    #endif
+
     // disconnect sensor
     if((ret = urg3d_close(&urg)) < 0) {
         printf("error urg3d_close %d\n", ret);

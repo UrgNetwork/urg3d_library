@@ -185,8 +185,8 @@ int main(int argc, char *argv[])
     /*
      * stop the acquisition flow started earlier using the start acquisition mode.
      */
-    if((ret = urg3d_high_stop_data(&urg, URG3D_DISTANCE_INTENSITY)) < 0) {
-        printf("error urg3d_high_stop_data %d\n", ret);
+    if((ret = urg3d_high_blocking_stop_data(&urg, URG3D_DISTANCE_INTENSITY)) < 0) {
+        printf("error urg3d_high_blocking_stop_data %d\n", ret);
         ret = urg3d_close(&urg);
         #if defined(URG3D_MSC)
             getchar();

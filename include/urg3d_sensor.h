@@ -399,6 +399,18 @@ extern "C" {
     extern int urg3d_high_stop_data(urg3d_t * const urg, urg3d_measurement_type_t meas);
 
     /*!
+      \brief request to stop data
+
+      \param[in,out] urg : urg3d session
+      \param[in] meas : urg3d_measurement_type_t sturct, i.e. meas = URG3D_DISTANCE_INTENSITY
+
+      \retval 1 succeeded
+      \retval 0 nothing happens
+    */
+    extern int urg3d_high_blocking_stop_data(urg3d_t* const urg, urg3d_measurement_type_t meas);
+
+
+    /*!
       \brief get "range and intensity" or "range only" user format from revceived data buffer
 
       \param[in,out] urg : urg3d session

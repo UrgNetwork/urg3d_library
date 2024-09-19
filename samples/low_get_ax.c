@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
                 }
             }
         } else {
-               #ifdef URG3D_WINDOWS_OS
+            #ifdef URG3D_WINDOWS_OS
                 Sleep(10);
             #else
                 usleep(10000);
@@ -131,6 +131,13 @@ int main(int argc, char *argv[])
     } else {
         printf("send ok -> DAT:ax=0\n");
     }
+
+    // wait stop
+    #ifdef URG3D_WINDOWS_OS
+        Sleep(1000);
+    #else
+        usleep(1000000);
+    #endif
 
     /*
      * close the connection to the sensor

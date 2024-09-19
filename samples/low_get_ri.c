@@ -142,6 +142,13 @@ int main(int argc, char *argv[])
         printf("send ok -> DAT:ri=0\n");
     }
 
+    // wait stop
+    #ifdef URG3D_WINDOWS_OS
+        Sleep(1000);
+    #else
+        usleep(1000000);
+    #endif
+
     /*
      * close the connection to the sensor
      */
