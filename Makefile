@@ -8,7 +8,7 @@ INCLUDE_DIR = $(PREFIX)/include/
 URGLIB_STATIC = liburg3d.a
 URGLIB_SHARED = $(shell if test `echo $(OS) | grep Windows`; then echo "urg3d.dll"; else echo "liburg3d.so"; fi)
 S_PREFIX = $(shell echo "$(PREFIX)" | sed "s/\//\\\\\\\\\//g")
-S_LIBS = $(shell if test `echo $(OS) | grep Windows`; then echo "-lwsock32 -lsetupapi"; else if test `echo $(OS) | grep Mac`; then echo ""; else "-lrt"; fi)
+S_LIBS = $(shell if test `echo $(OS) | grep Windows`; then echo "-lws2_32 -lsetupapi -lstdc++"; else if test `echo $(OS) | grep Mac`; then echo ""; else "-lrt"; fi)
 all : $(CONFIG_FILE)
 	cd src/ && $(MAKE)
 	cd samples/ && $(MAKE)

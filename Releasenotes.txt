@@ -1,3 +1,8 @@
+2025-06-17
+  * 2.0.0 released
+  * Supported VSSP version 2.3.
+  * The development language has changed to C++.
+
 2019-05-15
   * 1.1.1 released
   * Fixed encode issue of compile.bat.
@@ -17,9 +22,9 @@
   * Fix multi-threading problem which caused by shared static temporal variable
 
 2015-11-18
-	* 1.0.1 released
-	* Add sensor reboot sample
+  * 1.0.1 released
+  * Add sensor reboot sample
 
 2014-12-26
-	* 1.0.0 released.
-	* Initial release.
+  * 1.0.0 released.
+  * Initial release.

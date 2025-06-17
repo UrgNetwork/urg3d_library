@@ -3,18 +3,11 @@ Library usage:
 
 ##### Visual Studio Solution (Windows) #####
 
- Build the static library "urg3d.lib" with urg3d_library-X.X.X/vs201*/urg3d.sln.
- (Visual studio 2010 project and visual studio 2012 project exist.)
+ Build the static library "urg3d.lib" with urg3d_library-X.X.X/vs20**/urg3d.sln.
+ (Visual studio 2019 project and visual studio 2022 project exist.)
  
- Sample solutions that use urg3d.lib exist in urg3d_library-X.X.X/vs201*/.
+ Sample solutions that use urg3d.lib exist in urg3d_library-X.X.X/vs20**/.
  Each sample can be tested on the above visual studio project if it is set as the startup project.
-
-##### Visual Studio bat compile (Windows) #####
-
- Copy vsvars32.bat to urg3d_library-X.X.X/windowsexe.
- Execute urg3d_library-X.X.X/windowsexe/compile.bat to generate the static library urg3d.lib and samples.
-
- (If you want to clear created files, you can use urg3d_library-X.X.X/windowsexe/cleanobj.bat.)
 
 ##### gcc (Linux, MinGW) #####
 
