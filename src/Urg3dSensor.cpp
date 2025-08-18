@@ -37,6 +37,7 @@ int32_t Urg3dSensor::open(const char* ip, int port)
 {
     int ret = 0;
 
+    m_nextPacket = {0, 0, {0}};
     //connect
     if ((ret = m_connection->openConnection(ip, port)) < 0) {
         m_lastErrno = URG3D_ETHERNET_OPEN_ERROR;
@@ -1235,7 +1236,7 @@ int32_t Urg3dSensor::lowGetRangeHeader(URG3D_VSSP_HEADER_T& header,
     rb->read(buf, 4);
     rangeIndex.indexLength = (*(uint16_t*)(buf + 0));
     rangeIndex.nspots = (*(uint16_t*)(buf + 2));
-    rb->read(reinterpret_cast<char*>(rangeIndex.index.data()),
+    rb->read(reinterpret_cast<char*>(rangeIndex.index.data()) + rangeHeader.spot,
              (rangeIndex.nspots + 1) * sizeof(uint16_t));
 
     //skip reserve

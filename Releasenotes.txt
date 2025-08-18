@@ -1,3 +1,9 @@
+2025-08-18
+  * 2.0.1 released
+  * Fixed the copy destination for the range index.
+  * Added initialization for the nextPacket variable.
+  * Changed the maximum read buffer size.
+
 2025-06-17
   * 2.0.0 released
   * Supported VSSP version 2.3.
