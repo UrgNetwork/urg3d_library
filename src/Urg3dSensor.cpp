@@ -217,7 +217,7 @@ int32_t Urg3dSensor::highBlockingWaitFinishedInitialize()
             if (strncmp(data_p, "_ri=", 4) == 0) {
                 if (strncmp(data_p + 4, "000", 3) == 0) { ri = 1; }
                 if (strncmp(data_p + 4, "099", 3) == 0) { ri = 99; }
-                if (ro == 0) { ro = -1; }
+                if (ri == 0) { ri = -1; }
             }
             if (strncmp(data_p, "_ax=", 4) == 0) {
                 if (strncmp(data_p + 4, "000", 3) == 0) { ax = 1; }
@@ -1236,7 +1236,7 @@ int32_t Urg3dSensor::lowGetRangeHeader(URG3D_VSSP_HEADER_T& header,
     rb->read(buf, 4);
     rangeIndex.indexLength = (*(uint16_t*)(buf + 0));
     rangeIndex.nspots = (*(uint16_t*)(buf + 2));
-    rb->read(reinterpret_cast<char*>(rangeIndex.index.data()) + rangeHeader.spot,
+    rb->read(reinterpret_cast<char*>(rangeIndex.index.data()),
              (rangeIndex.nspots + 1) * sizeof(uint16_t));
 
     //skip reserve
