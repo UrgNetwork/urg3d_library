@@ -217,7 +217,7 @@ int32_t Urg3dSensor::highBlockingWaitFinishedInitialize()
             if (strncmp(data_p, "_ri=", 4) == 0) {
                 if (strncmp(data_p + 4, "000", 3) == 0) { ri = 1; }
                 if (strncmp(data_p + 4, "099", 3) == 0) { ri = 99; }
-                if (ro == 0) { ro = -1; }
+                if (ri == 0) { ri = -1; }
             }
             if (strncmp(data_p, "_ax=", 4) == 0) {
                 if (strncmp(data_p + 4, "000", 3) == 0) { ax = 1; }
