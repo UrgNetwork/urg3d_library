@@ -1,3 +1,7 @@
+2026-11-25
+  * 2.1.0 released
+  * Added Python bindings for the URG-3D library.
+
 2025-08-18
   * 2.0.1 released
   * Fixed the copy destination for the range index.
