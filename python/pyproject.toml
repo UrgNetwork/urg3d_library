@@ -1,0 +1,22 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.12"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "urg3d"
+version = "2.1.0"
+description = "Python bindings for the Hokuyo URG-3D C++ library"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "../copyright.txt" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+]
+
+[tool.scikit-build]
+cmake.version = ">=3.18"
+wheel.packages = ["src/urg3d"]
+sdist.include = ["../include", "../src"]
